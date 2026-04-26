@@ -15,7 +15,7 @@ services:
       retries: 10
 
   cloud:
-    image: ghcr.io/gentleman-programming/engram-cloud:latest
+    image: ghcr.io/gentleman-programming/engram:latest
     restart: unless-stopped
     depends_on:
       postgres:
