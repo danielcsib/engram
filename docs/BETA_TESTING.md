@@ -28,7 +28,7 @@ Reset anytime with the cleanup section at the end.
 ## Prerequisites
 
 - Docker + Docker Compose
-- Go 1.21+ (to build the beta binary)
+- Go 1.25+ (to build the beta binary — see `go.mod`)
 - For Phase 4 testing: `claude` or `opencode` CLI installed and authenticated (whichever you already use)
 
 ---
@@ -99,19 +99,23 @@ Expected: cloud status shows `configured=true`, server matches the beta URL.
 
 ### 5.1 Phase 1 baseline — conflict surfacing on save
 
-```bash
-# Create a session
-./engram-beta save "Use Clean Architecture" \
-  --project beta-test --type architecture \
-  --content "Layers: entities, use cases, adapters."
+The CLI `save` syntax is positional: `engram save <title> <content> [flags]`.
 
-# Save a conflicting memory
-./engram-beta save "Use Hexagonal Architecture" \
-  --project beta-test --type architecture \
-  --content "Ports and adapters separate domain from infra."
+```bash
+# First memory
+./engram-beta save \
+  "Use Clean Architecture" \
+  "Layers: entities, use cases, adapters." \
+  --type architecture --project beta-test
+
+# Conflicting memory
+./engram-beta save \
+  "Use Hexagonal Architecture" \
+  "Ports and adapters separate domain from infra." \
+  --type architecture --project beta-test
 ```
 
-The second `mem_save` should return `candidates[]` with the first memory's id and a `judgment_id`. This is **Phase 1** behavior — base feature already shipped, included here as sanity check.
+The second `save` should return `candidates[]` with the first memory's id and a `judgment_id`. This is **Phase 1** behavior — base feature already shipped, included here as sanity check.
 
 ---
 
@@ -166,12 +170,21 @@ The 2nd "machine" should see the memories synced from the 1st.
 ./engram-beta conflicts show <relation_id>
 ```
 
-The HTTP API works too:
+The HTTP API works too. The `/conflicts/*` routes live on the **local engram serve** (port 7437) — no auth required, localhost-only. Start it in a separate terminal:
 
 ```bash
-curl -s -H "Authorization: Bearer $ENGRAM_CLOUD_TOKEN" \
-  "http://127.0.0.1:7437/conflicts?project=beta-test" | jq
+# Terminal 2 (keep the same exported env vars from step 4):
+./engram-beta serve
 ```
+
+Then query from anywhere:
+
+```bash
+curl -s "http://127.0.0.1:7437/conflicts?project=beta-test" | jq
+curl -s "http://127.0.0.1:7437/conflicts/stats?project=beta-test" | jq
+```
+
+Note: this is the **client-side serve** (your local API), not the beta cloud. Cloud sync of relations happens in the background per Phase 2.
 
 ---
 
@@ -207,10 +220,15 @@ After scan:
 **Test the killer case** — vocabulary-different conflict:
 
 ```bash
-./engram-beta save "Use Postgres for the user database" \
-  --project beta-test --type architecture
-./engram-beta save "We migrated to MongoDB last quarter" \
-  --project beta-test --type decision
+./engram-beta save \
+  "Use Postgres for the user database" \
+  "Postgres 15 is our SQL store for users and sessions." \
+  --type architecture --project beta-test
+
+./engram-beta save \
+  "We migrated to MongoDB last quarter" \
+  "Document store now backs the user collection. SQL is gone." \
+  --type decision --project beta-test
 
 ./engram-beta conflicts scan --project beta-test --semantic --apply \
   --max-semantic 5 --yes
