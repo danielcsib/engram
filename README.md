@@ -11,7 +11,7 @@
   <a href="docs/INSTALLATION.md">Installation</a> &bull;
   <a href="docs/engram-cloud/README.md">Engram Cloud</a> &bull;
   <a href="docs/AGENT-SETUP.md">Agent Setup</a> &bull;
-  <a href="docs/GUIA-DEFINITIVA-DEL-CODEBASE.md">Codebase Guide (ES)</a> &bull;
+  <a href="docs/CODEBASE-GUIDE.md">Codebase Guide</a> &bull;
   <a href="docs/ARCHITECTURE.md">Architecture</a> &bull;
   <a href="docs/PLUGINS.md">Plugins</a> &bull;
   <a href="CONTRIBUTING.md">Contributing</a> &bull;
@@ -314,7 +314,7 @@ Full CLI with all flags → [docs/ARCHITECTURE.md#cli-reference](docs/ARCHITECTU
 | [Installation](docs/INSTALLATION.md) | All install methods + platform support |
 | [Engram Cloud](docs/engram-cloud/README.md) | Cloud landing page, quickstart, branding, and deep links |
 | [Agent Setup](docs/AGENT-SETUP.md) | Per-agent configuration + Memory Protocol |
-| [Codebase Guide (ES)](docs/GUIA-DEFINITIVA-DEL-CODEBASE.md) | Spanish guide to the repository structure, flows, and implementation landmarks |
+| [Codebase Guide](docs/CODEBASE-GUIDE.md) | Guide to the repository structure, flows, and implementation landmarks |
 | [Architecture](docs/ARCHITECTURE.md) | How it works + MCP tools + project structure |
 | [Plugins](docs/PLUGINS.md) | OpenCode & Claude Code plugin details |
 | [Comparison](docs/COMPARISON.md) | Why Engram vs claude-mem |
