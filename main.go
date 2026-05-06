@@ -16,6 +16,7 @@ var (
 
 func main() {
 	if err := cmd.Execute(Version, Commit, BuildDate); err != nil {
+		// Print error to stderr and exit with a non-zero status code
 		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
